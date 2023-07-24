@@ -10,11 +10,17 @@ type WindowSize = {
  * @returns {WindowSize}
  */
 function useWindowSize(): WindowSize {
-	const [windowSize, setWindowSize] = React.useState<WindowSize>({ width: 0, height: 0 });
+	const [windowSize, setWindowSize] = React.useState<WindowSize>({
+		width: 0,
+		height: 0,
+	});
 
 	React.useEffect(() => {
 		function handleWindowResize() {
-			setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+			setWindowSize({
+				width: window.innerWidth,
+				height: window.innerHeight,
+			});
 		}
 
 		handleWindowResize();
@@ -39,7 +45,10 @@ type MousePosition = {
  * @returns {MousePosition}
  */
 function useMouse(): MousePosition {
-	const [mousePosition, setMousePosition] = React.useState<MousePosition>({ x: 0, y: 0 });
+	const [mousePosition, setMousePosition] = React.useState<MousePosition>({
+		x: 0,
+		y: 0,
+	});
 
 	React.useEffect(() => {
 		function handleMouseMovement(event: MouseEvent) {
@@ -77,4 +86,12 @@ function useLocalStorage(
 	return [data, setData];
 }
 
-export { useMouse, useWindowSize, useLocalStorage };
+function useKeyboard(eventHandler: (event: KeyboardEvent) => void) {
+	React.useEffect(() => {
+		window.addEventListener('keydown', eventHandler);
+
+		return () => window.removeEventListener('keydown', eventHandler);
+	});
+}
+
+export { useMouse, useWindowSize, useLocalStorage, useKeyboard };
