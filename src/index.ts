@@ -86,6 +86,11 @@ function useLocalStorage(
 	return [data, setData];
 }
 
+/**
+ * Create a React Hook that listens to keyboard actions and executes a function defined through the params.
+ * @param {any} eventHandler:(event:KeyboardEvent
+ * @returns {any}
+ */
 function useKeyboard(eventHandler: (event: KeyboardEvent) => void) {
 	React.useEffect(() => {
 		window.addEventListener('keydown', eventHandler);
