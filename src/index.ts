@@ -67,7 +67,7 @@ function useMouse(): MousePosition {
 /**
  * Create a React Hook that retrieves a item inside Local Storage or create one. On change update Local Storage item.
  * @param {string} key
- * @param {any} initial
+ * @param {string} initial
  * @returns {[string, Dispatch<SetStateAction<string>>]}
  */
 function useLocalStorage(
@@ -88,8 +88,8 @@ function useLocalStorage(
 
 /**
  * Create a React Hook that listens to keyboard actions and executes a function defined through the params.
- * @param {any} eventHandler:(event:KeyboardEvent
- * @returns {any}
+ * @param {KeyboardEvent} eventHandler:(event:KeyboardEvent
+ * @returns {void}
  */
 function useKeyboard(eventHandler: (event: KeyboardEvent) => void) {
 	React.useEffect(() => {
@@ -99,4 +99,19 @@ function useKeyboard(eventHandler: (event: KeyboardEvent) => void) {
 	});
 }
 
-export { useMouse, useWindowSize, useLocalStorage, useKeyboard };
+/**
+ * Create a React Hook that return a boolean state and a function to change the state.
+ * @param {boolean} defaultValue:boolean
+ * @returns {[boolean, (value:boolean) => void]}
+ */
+function useToggle(defaultValue: boolean): [boolean, (value: boolean) => void] {
+	const [toggle, setToggle] = React.useState(defaultValue);
+
+	function changeToggle(value: boolean | null) {
+		setToggle((prev) => (typeof value === 'boolean' ? value : !prev));
+	}
+
+	return [toggle, changeToggle];
+}
+
+export { useMouse, useWindowSize, useLocalStorage, useKeyboard, useToggle };
