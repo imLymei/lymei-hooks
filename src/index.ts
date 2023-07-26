@@ -89,7 +89,6 @@ function useLocalStorage(
 /**
  * Create a React Hook that listens to keyboard actions and executes a function defined through the params.
  * @param {KeyboardEvent} eventHandler:(event:KeyboardEvent
- * @returns {void}
  */
 function useKeyboard(eventHandler: (event: KeyboardEvent) => void) {
 	React.useEffect(() => {
@@ -114,4 +113,38 @@ function useToggle(defaultValue: boolean): [boolean, (value: boolean) => void] {
 	return [toggle, changeToggle];
 }
 
-export { useMouse, useWindowSize, useLocalStorage, useKeyboard, useToggle };
+/**
+ * Create a timeout that executes a function after a delay. Can be reset or cleared.
+ * @param {any} callback Function to be executed after timeout
+ * @returns {void}
+ */
+function useTimeout(callback: () => void, delay: number): { reset: () => void; clear: () => void } {
+	const callbackRef = React.useRef(callback);
+	const timeoutRef = React.useRef<NodeJS.Timeout>();
+
+	React.useEffect(() => {
+		callbackRef.current = callback;
+	}, [callback]);
+
+	const set = React.useCallback(() => {
+		timeoutRef.current = setTimeout(() => callbackRef.current(), delay);
+	}, [delay]);
+
+	const clear = React.useCallback(() => {
+		timeoutRef.current && clearTimeout(timeoutRef.current);
+	}, []);
+
+	React.useEffect(() => {
+		set();
+		return clear;
+	}, [delay, set, clear]);
+
+	const reset = React.useCallback(() => {
+		clear();
+		set();
+	}, [clear, set]);
+
+	return { reset, clear };
+}
+
+export { useMouse, useWindowSize, useLocalStorage, useKeyboard, useToggle, useTimeout };
