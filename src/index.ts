@@ -7,7 +7,7 @@ type WindowSize = {
 
 /**
  * Create a React Hook that retrieves the current window size.
- * @returns {WindowSize}
+ * @returns {WindowSize} A object with the width and height of the window
  */
 function useWindowSize(): WindowSize {
 	const [windowSize, setWindowSize] = React.useState<WindowSize>({
@@ -42,7 +42,7 @@ type MousePosition = {
 
 /**
  * Create a React Hook that retrieves the current mouse position.
- * @returns {MousePosition}
+ * @returns {MousePosition} A object with the x and y position of the mouse
  */
 function useMouse(): MousePosition {
 	const [mousePosition, setMousePosition] = React.useState<MousePosition>({
@@ -66,9 +66,9 @@ function useMouse(): MousePosition {
 
 /**
  * Create a React Hook that retrieves a item inside Local Storage or create one. On change update Local Storage item.
- * @param {string} key
- * @param {string} initial
- * @returns {[string, Dispatch<SetStateAction<string>>]}
+ * @param {string} key String with the localStorage key
+ * @param {string} initial The initial value of the localStorage if it doesn't exist.
+ * @returns {[string, Dispatch<SetStateAction<string>>]} An array with the state containing the data of the localStorage, along with a function to change it
  */
 function useLocalStorage(
 	key: string,
@@ -88,7 +88,7 @@ function useLocalStorage(
 
 /**
  * Create a React Hook that listens to keyboard actions and executes a function defined through the params.
- * @param {KeyboardEvent} eventHandler:(event:KeyboardEvent
+ * @param {KeyboardEvent} eventHandler Function that receive the KeyboardEvent and do some logic
  */
 function useKeyboard(eventHandler: (event: KeyboardEvent) => void) {
 	React.useEffect(() => {
@@ -100,8 +100,8 @@ function useKeyboard(eventHandler: (event: KeyboardEvent) => void) {
 
 /**
  * Create a React Hook that return a boolean state and a function to change the state.
- * @param {boolean} defaultValue:boolean
- * @returns {[boolean, (value:boolean) => void]}
+ * @param {boolean} defaultValue The default value of the boolean state
+ * @returns {[boolean, (value:boolean) => void]} An array with the state containing the boolean value, along with a function to change it
  */
 function useToggle(defaultValue: boolean): [boolean, (value: boolean) => void] {
 	const [toggle, setToggle] = React.useState(defaultValue);
@@ -114,9 +114,10 @@ function useToggle(defaultValue: boolean): [boolean, (value: boolean) => void] {
 }
 
 /**
- * Create a timeout that executes a function after a delay. Can be reset or cleared.
+ * Create a timeout that executes a function after a delay. Can be reset or cleared
  * @param {any} callback Function to be executed after timeout
- * @returns {void}
+ * @param {any} delay Delay for the function execution
+ * @returns {object} A object with the reset and clear functions
  */
 function useTimeout(callback: () => void, delay: number): { reset: () => void; clear: () => void } {
 	const callbackRef = React.useRef(callback);
@@ -147,4 +148,16 @@ function useTimeout(callback: () => void, delay: number): { reset: () => void; c
 	return { reset, clear };
 }
 
-export { useMouse, useWindowSize, useLocalStorage, useKeyboard, useToggle, useTimeout };
+/**
+ * Create a useTimeout function that is reset after the dependencies are reset
+ * @param {() => void} callback Function to be executed after some delay over dependencies
+ * @param {number} delay Delay for the function execution
+ * @param {any} dependencies Dependencies that reset the delay timer
+ */
+function useDelay(callback: () => void, delay: number, dependencies: any[]) {
+	const { reset, clear } = useTimeout(callback, delay);
+	React.useEffect(reset, [...dependencies, reset]);
+	React.useEffect(clear);
+}
+
+export { useMouse, useWindowSize, useLocalStorage, useKeyboard, useToggle, useTimeout, useDelay };
