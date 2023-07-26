@@ -157,7 +157,7 @@ function useTimeout(callback: () => void, delay: number): { reset: () => void; c
 function useDelay(callback: () => void, delay: number, dependencies: any[]) {
 	const { reset, clear } = useTimeout(callback, delay);
 	React.useEffect(reset, [...dependencies, reset]);
-	React.useEffect(clear);
+	React.useEffect(clear, []);
 }
 
 export { useMouse, useWindowSize, useLocalStorage, useKeyboard, useToggle, useTimeout, useDelay };
