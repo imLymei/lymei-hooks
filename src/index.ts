@@ -160,4 +160,26 @@ function useDelay(callback: () => void, delay: number, dependencies: any[]) {
 	React.useEffect(clear, []);
 }
 
-export { useMouse, useWindowSize, useLocalStorage, useKeyboard, useToggle, useTimeout, useDelay };
+function useUpdateEffect(callback: () => void, dependencies: any[]) {
+	const isFirstRender = React.useRef(true);
+
+	React.useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+
+		return callback();
+	}, dependencies);
+}
+
+export {
+	useMouse,
+	useWindowSize,
+	useLocalStorage,
+	useKeyboard,
+	useToggle,
+	useTimeout,
+	useDelay,
+	useUpdateEffect,
+};
