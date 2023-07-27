@@ -160,7 +160,12 @@ function useDelay(callback: () => void, delay: number, dependencies: any[]) {
 	React.useEffect(clear, []);
 }
 
-function useUpdateEffect(callback: () => void, dependencies: any[]) {
+/**
+ * Execute a function from the first update of a value in dependencies
+ * @param {any} callback Function to be executed after some delay over dependencies
+ * @param {any} dependencies Dependencies that reset the delay timer
+ */
+function useUpdateEffect(callback: () => void, dependencies: any[]): void {
 	const isFirstRender = React.useRef(true);
 
 	React.useEffect(() => {
@@ -173,6 +178,36 @@ function useUpdateEffect(callback: () => void, dependencies: any[]) {
 	}, dependencies);
 }
 
+type ArrayControl = {
+	clear: () => void;
+	push: (value: any) => void;
+	remove: (index: number) => void;
+	update: (index: number, value: any) => void;
+	filter: (filter: () => boolean) => void;
+};
+/**
+ * A Better way to create a piece of state with a array
+ * @param {any[]} defaultValue The default array model
+ * @returns {[any[], ArrayControl]} Return a state of an array and an object to modify it
+ */
+function useArray(defaultValue?: any[]): [any[], ArrayControl] {
+	const [array, setArray] = React.useState(defaultValue ? defaultValue : []);
+
+	const arrayControl: ArrayControl = {
+		clear: () => setArray([]),
+		push: (value: any) => setArray((prev) => [...prev, value]),
+		remove: (index: number) => {
+			setArray((prev) => [...prev.slice(0, index), ...prev.slice(index + 1, prev.length - 1)]);
+		},
+		update: (index: number, value: any) => {
+			setArray((prev) => [...prev.slice(0, index), value, ...prev.slice(index + 1, prev.length - 1)]);
+		},
+		filter: (filter: () => boolean) => setArray((prev) => prev.filter(filter)),
+	};
+
+	return [array, arrayControl];
+}
+
 export {
 	useMouse,
 	useWindowSize,
@@ -182,4 +217,5 @@ export {
 	useTimeout,
 	useDelay,
 	useUpdateEffect,
+	useArray,
 };
