@@ -24,6 +24,8 @@ function MeuComponente() {
 }
 ```
 
+---
+
 ### `useLocalStorage`
 
 Este hook facilita a gestão de dados no armazenamento local (local storage). Ele recupera um item armazenado no local storage ou cria um novo item, e atualiza automaticamente o valor armazenado quando ele é alterado.
@@ -110,6 +112,108 @@ function MeuComponente() {
 	);
 }
 ```
+
+### `useTimeout`
+
+O `useTimeout` cria um temporizador que executa uma função após um determinado atraso. Ele também fornece funções para redefinir ou cancelar o temporizador.
+
+#### Uso
+
+```jsx
+import { useTimeout } from 'seu-pacote-de-hooks-react';
+
+function MeuComponente() {
+  const minhaFuncao = () => {
+    // Sua lógica a ser executada após o atraso
+  };
+
+  const delay = 1000; // 1 segundo de atraso
+
+  const { reset, clear } = useTimeout(minhaFuncao, delay);
+
+  // Use reset para redefinir o temporizador ou clear para cancelá-lo
+
+  return (
+    // Seu JSX do componente
+  );
+}
+```
+
+### `useDelay`
+
+O `useDelay` é uma versão aprimorada do `useTimeout`, pois redefinirá o temporizador sempre que as dependências especificadas mudarem.
+
+#### Uso
+
+```jsx
+import { useDelay } from 'seu-pacote-de-hooks-react';
+
+function MeuComponente({ valor }) {
+  const minhaFuncao = () => {
+    // Sua lógica a ser executada após o atraso quando o valor mudar
+  };
+
+  const delay = 1000; // 1 segundo de atraso
+
+  useDelay(minhaFuncao, delay, [valor]);
+
+  return (
+    // Seu JSX do componente
+  );
+}
+```
+
+### `useUpdateEffect`
+
+O `useUpdateEffect` executa uma função a partir da primeira atualização de um valor nas dependências especificadas.
+
+#### Uso
+
+```jsx
+import { useUpdateEffect } from 'seu-pacote-de-hooks-react';
+
+function MeuComponente({ valor }) {
+  const minhaFuncao = () => {
+    // Sua lógica a ser executada após a primeira atualização de valor
+  };
+
+  useUpdateEffect(minhaFuncao, [valor]);
+
+  return (
+    // Seu JSX do componente
+  );
+}
+```
+
+### `useArray`
+
+O `useArray` é uma forma mais fácil de criar e manipular um estado que é uma matriz.
+
+#### Uso
+
+```jsx
+import { useArray } from 'seu-pacote-de-hooks-react';
+
+function MeuComponente() {
+  const [meuArray, arrayControl] = useArray();
+
+  // Acesse meuArray para a sua lógica e use arrayControl para manipulá-lo
+
+  return (
+    // Seu JSX do componente
+  );
+}
+```
+
+#### Comandos
+
+| Comandos |    Parâmetros    |                                  Função                                  |
+| :------: | :--------------: | :----------------------------------------------------------------------: |
+| `clear`  |      Nenhum      |                  Transforma a array em uma array vazia                   |
+|  `push`  |     `value`      |          Adiciona um novo elemento (`value`) no final da array           |
+| `remove` |     `index`      |             Remove um elemento da array utilizando o `index`             |
+| `update` | `index`, `value` |     Atualiza um elemento na array pelo `index` por um novo (`value`)     |
+| `filter` |     `filter`     | Modifica a array deixando apenas os elementos que passarem pelo `filter` |
 
 ## Instalação
 
