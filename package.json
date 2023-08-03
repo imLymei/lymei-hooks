@@ -21,9 +21,9 @@
 	"author": "Felipe Cardoso (imlymei)",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/imLymei/npx-utils/issues"
+		"url": "https://github.com/imLymei/lymei-hooks/issues"
 	},
-	"homepage": "https://github.com/imLymei/npx-utils#readme",
+	"homepage": "https://github.com/imLymei/lymei-hooks#readme",
 	"devDependencies": {
 		"@types/node": "^20.4.4",
 		"@types/react": "^18.2.15",

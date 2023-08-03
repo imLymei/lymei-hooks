@@ -208,6 +208,34 @@ function useArray(defaultValue?: any[]): [any[], ArrayControl] {
 	return [array, arrayControl];
 }
 
+type Scroll = {
+	number: number;
+	percentage: number;
+};
+
+/**
+ * Create a state that stores the scroll position of the page
+ * @returns {Scroll}
+ */
+function useScroll(): Scroll {
+	const [scroll, setScroll] = React.useState<Scroll>({ number: 0, percentage: 0 });
+
+	function handleScroll() {
+		const percentage = Math.round((window.scrollY / window.innerHeight) * 100) / 100;
+		setScroll({ number: window.scrollY, percentage: percentage });
+	}
+
+	React.useEffect(() => {
+		window.addEventListener('scroll', handleScroll);
+
+		handleScroll();
+
+		return () => window.removeEventListener('scroll', handleScroll);
+	}, []);
+
+	return scroll;
+}
+
 export {
 	useMouse,
 	useWindowSize,
@@ -218,4 +246,5 @@ export {
 	useDelay,
 	useUpdateEffect,
 	useArray,
+	useScroll,
 };

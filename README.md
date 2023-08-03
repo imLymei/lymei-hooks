@@ -24,7 +24,28 @@ function MeuComponente() {
 }
 ```
 
----
+### `useScroll`
+
+Este hook fornece informações em tempo real sobre a posição de rolagem da janela, retornando um objeto contendo a posição atual de rolagem em pixels e a porcentagem de rolagem em relação à altura total da janela.
+
+#### Uso
+
+```jsx
+import { useScroll } from '@lymei/hooks';
+
+function MeuComponente() {
+  const scroll = useScroll();
+
+  // Agora você pode acessar a posição de rolagem e a porcentagem.
+  console.log('Posição de Rolagem:', scroll.number);
+  console.log('Porcentagem de Rolagem:', scroll.percentage);
+
+  return (
+    // Seu JSX aqui
+  );
+}
+
+```
 
 ### `useLocalStorage`
 
