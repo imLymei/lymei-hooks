@@ -236,6 +236,64 @@ function useScroll(): Scroll {
 	return scroll;
 }
 
+function useStateWithHistory<t>(
+	defaultValue: t,
+	{ capacity = 10 } = {}
+): [
+	t,
+	(value: t | ((prev: t) => t)) => void,
+	{ history: t[]; pointer: number; back: () => void; forward: () => void; goTo: (index: number) => void }
+] {
+	const [value, setValue] = React.useState<t>(defaultValue);
+	const historyRef = React.useRef([value]);
+	const pointerRef = React.useRef(0);
+
+	const set = React.useCallback(
+		(setValueParam: t | ((prev: t) => t)) => {
+			//@ts-ignore
+			const resolvedValue = typeof setValueParam === 'function' ? setValueParam(value) : setValueParam;
+			if (historyRef.current[pointerRef.current] !== resolvedValue) {
+				if (pointerRef.current < historyRef.current.length - 1)
+					historyRef.current.splice(pointerRef.current + 1);
+
+				historyRef.current.push(resolvedValue);
+
+				while (historyRef.current.length > capacity) {
+					historyRef.current.shift();
+				}
+
+				pointerRef.current = historyRef.current.length - 1;
+			}
+
+			setValue(resolvedValue);
+		},
+		[capacity, value]
+	);
+
+	const forward = React.useCallback(() => {
+		if (pointerRef.current < historyRef.current.length - 1) {
+			pointerRef.current++;
+			setValue(historyRef.current[pointerRef.current]);
+		}
+	}, []);
+
+	const back = React.useCallback(() => {
+		if (pointerRef.current > 0) {
+			pointerRef.current--;
+			setValue(historyRef.current[pointerRef.current]);
+		}
+	}, []);
+
+	const goTo = React.useCallback((index: number) => {
+		if (index > 0 && index < historyRef.current.length - 1) {
+			pointerRef.current = index;
+			setValue(historyRef.current[pointerRef.current]);
+		}
+	}, []);
+
+	return [value, set, { history: historyRef.current, pointer: pointerRef.current, back, forward, goTo }];
+}
+
 export {
 	useMouse,
 	useWindowSize,
@@ -247,4 +305,5 @@ export {
 	useUpdateEffect,
 	useArray,
 	useScroll,
+	useStateWithHistory,
 };

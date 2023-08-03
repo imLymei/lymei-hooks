@@ -141,7 +141,7 @@ O `useTimeout` cria um temporizador que executa uma função após um determinad
 #### Uso
 
 ```jsx
-import { useTimeout } from 'seu-pacote-de-hooks-react';
+import { useTimeout } from '@lymei/hooks';
 
 function MeuComponente() {
   const minhaFuncao = () => {
@@ -167,7 +167,7 @@ O `useDelay` é uma versão aprimorada do `useTimeout`, pois redefinirá o tempo
 #### Uso
 
 ```jsx
-import { useDelay } from 'seu-pacote-de-hooks-react';
+import { useDelay } from '@lymei/hooks';
 
 function MeuComponente({ valor }) {
   const minhaFuncao = () => {
@@ -191,7 +191,7 @@ O `useUpdateEffect` executa uma função a partir da primeira atualização de u
 #### Uso
 
 ```jsx
-import { useUpdateEffect } from 'seu-pacote-de-hooks-react';
+import { useUpdateEffect } from '@lymei/hooks';
 
 function MeuComponente({ valor }) {
   const minhaFuncao = () => {
@@ -213,7 +213,7 @@ O `useArray` é uma forma mais fácil de criar e manipular um estado que é uma 
 #### Uso
 
 ```jsx
-import { useArray } from 'seu-pacote-de-hooks-react';
+import { useArray } from '@lymei/hooks';
 
 function MeuComponente() {
   const [meuArray, arrayControl] = useArray();
@@ -235,6 +235,27 @@ function MeuComponente() {
 | `remove` |     `index`      |             Remove um elemento da array utilizando o `index`             |
 | `update` | `index`, `value` |     Atualiza um elemento na array pelo `index` por um novo (`value`)     |
 | `filter` |     `filter`     | Modifica a array deixando apenas os elementos que passarem pelo `filter` |
+
+### `useStateWithHistory`
+
+O `useStateWithHistory` é um hook que fornece um mecanismo de gerenciamento de estado com rastreamento de histórico
+
+#### Uso
+
+```jsx
+import { useStateWithHistory } from '@lymei/hooks';
+
+function MeuComponente() {
+  const [estado, setEstado, { history, pointer, back, forward, goTo }] = useStateWithHistory(valorInicial, { capacity: 10 });
+
+  // Acesse 'estado' para obter o valor atual, use 'setEstado' para atualizar o estado e utilize as funções relacionadas ao histórico.
+
+  return (
+    // Seu JSX aqui
+  );
+}
+}
+```
 
 ## Instalação
 
