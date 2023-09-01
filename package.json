@@ -1,6 +1,6 @@
 {
 	"name": "@lymei/hooks",
-	"version": "1.2.1",
+	"version": "1.3.0",
 	"description": "A comprehensive collection of react hooks.",
 	"main": "./dist/esm/index.js",
 	"module": "./dist/esm/index.js",
