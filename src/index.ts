@@ -154,7 +154,7 @@ function useTimeout(callback: () => void, delay: number): { reset: () => void; c
  * @param {number} delay Delay for the function execution
  * @param {any} dependencies Dependencies that reset the delay timer
  */
-function useDelay(callback: () => void, delay: number, dependencies: any[]) {
+function useDebounce(callback: () => void, delay: number, dependencies: any[]) {
 	const { reset, clear } = useTimeout(callback, delay);
 	React.useEffect(reset, [...dependencies, reset]);
 	React.useEffect(clear, []);
@@ -294,6 +294,52 @@ function useStateWithHistory<t>(
 	return [value, set, { history: historyRef.current, pointer: pointerRef.current, back, forward, goTo }];
 }
 
+type PageSystem = Record<string, React.ReactNode>;
+/**
+ * A custom React hook for managing a single active page from a system of pages.
+ *
+ * @template T - The type of the page system, which is an object where keys are page names
+ * and values are React components (React nodes).
+ *
+ * @param {T} pageSystem - The object representing the system of pages.
+ * @param {keyof T | null} [defaultPage=null] - The optional default page to set initially.
+ * @returns {readonly [() => React.ReactNode | null, React.Dispatch<React.SetStateAction<keyof T | null>>]}
+ * A tuple containing a setter function to set the active page and a function to get the active page.
+ *
+ * @example
+ * // Define a page system.
+ * const pageSystem = {
+ *   default: <DefaultPage />,
+ *   list: <ListPage />,
+ *   data: <DataPage />,
+ * };
+ *
+ * // Use the hook to manage the active page with a default of 'default'.
+ * const [GetPage, setPage] = useSinglePage(pageSystem, 'default');
+ *
+ * // Set the active page to 'list'.
+ * setPage('list');
+ *
+ * // Get the active page component.
+ * return (
+ * 		<div>
+ * 			<GetPage />
+ * 		</div>
+ * );
+ */
+function useSinglePage<T extends PageSystem>(
+	pageSystem: T,
+	defaultPage: keyof T | null = null
+): readonly [() => React.ReactNode | null, React.Dispatch<React.SetStateAction<keyof T | null>>] {
+	const [page, setPage] = React.useState<keyof T | null>(defaultPage);
+
+	function GetPage(): React.ReactNode | null {
+		return page !== null ? pageSystem[page] : null;
+	}
+
+	return [GetPage, setPage] as const;
+}
+
 export {
 	useMouse,
 	useWindowSize,
@@ -301,9 +347,10 @@ export {
 	useKeyboard,
 	useToggle,
 	useTimeout,
-	useDelay,
+	useDebounce,
 	useUpdateEffect,
 	useArray,
 	useScroll,
 	useStateWithHistory,
+	useSinglePage,
 };
